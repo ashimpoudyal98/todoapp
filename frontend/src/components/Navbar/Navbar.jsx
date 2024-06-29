@@ -5,142 +5,121 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-// import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import { useTodoContext } from "../Context/TodoContext";
+import AshimImg from "../../assets/ashim.jpg";
+import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
+import { useTheme } from "@emotion/react";
+import styled from "styled-components";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const theme = useTheme();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { todos } = useTodoContext();
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  const numTodos = todos.length;
+
+  console.log(numTodos);
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
+  // const WelcomeText = styled.p`
+  //   @media (min-width: 1000px) {
+  //     display: none;
+  //     margin-right: 0; /* Remove default margin */
+  //     align-items: center;
+  //     padding: 0; /* Remove default padding */
+  //     font-size: 1rem; /* Adjust font size as needed */
+  //   }
+  // `;
+
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{
+          [theme.breakpoints.down("sm")]: {
+            display: "flex",
+            justifyContent: "space-between",
+          },
+        }}
+      >
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/* Logo (centered) */}
+          {/* Logo (centered) */}
           <Typography
             variant="h6"
             noWrap
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
               flexGrow: 1,
+              textAlign: "center",
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
+              [theme.breakpoints.down("sm")]: {
+                display: "flex", // Hide logo on small screens
+                fontSize: "20px",
+              },
               textDecoration: "none",
+              display: "flex",
             }}
           >
-            LOGO
+            TODO
           </Typography>
 
+          <Typography
+            variant="h6"
+            noWrap
+            sx={{
+              flexGrow: 1,
+              textAlign: "center",
+              fontFamily: "monospace",
+              marginLeft: "160px",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+
+              [theme.breakpoints.down("sm")]: {
+                fontSize: "15px",
+              },
+
+              color: "inherit",
+              display: { xs: "flex", md: "flex" },
+            }}
+          >
+            You have {numTodos} todos
+          </Typography>
+
+          {/* Profile icon (right-aligned) */}
           <Box
             sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
+              [theme.breakpoints.down("sm")]: {
+                display: "none", // Hide logo on small screens
+              },
             }}
           >
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: "flex",
-                alignItems: "center",
-                color: "inherit",
-              }}
-            >
-              X todos
-            </Typography>
+            <p>Welcome! Ashim Poudyal </p>
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{ paddingLeft: "10px" }}
+              >
+                <Avatar alt="Remy Sharp" src={AshimImg} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -171,4 +150,5 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

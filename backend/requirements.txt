@@ -1,0 +1,10 @@
+asgiref
+cffi
+cryptography
+Django
+django-cors-headers
+django-rest-knox
+djangorestframework
+pillow
+pycparser
+sqlparse
