@@ -23,12 +23,10 @@ const SignupForm = () => {
       navigate("/login");
     },
     onError: (error) => {
-      // Handle specific error messages here
-      if (error.response.status === 409) {
-        // Assuming 409 is the status code for conflict (username already exists)
-        toast.error("Username is already taken. Please choose another one.");
+      if (error.response && error.response.status === 400) {
+        alert("Username is already taken. Please choose another one.");
       } else {
-        toast.error("Failed to register. Please try again later.");
+        alert("Failed to register. Please try again later.");
       }
     },
   });

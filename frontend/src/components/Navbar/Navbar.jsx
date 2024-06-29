@@ -134,7 +134,14 @@ function ResponsiveAppBar() {
             <Tooltip title="Open settings">
               <IconButton
                 onClick={handleOpenUserMenu}
-                sx={{ paddingLeft: "10px" }}
+                sx={{
+                  paddingLeft: "10px",
+                  [theme.breakpoints.down("sm")]: {
+                    display: "flex",
+                    flexDirection: "flex-end",
+                    marginLeft: "189px",
+                  },
+                }}
               >
                 <Avatar
                   alt="Remy Sharp"
