@@ -113,3 +113,47 @@ export const logoutFn = async () => {
   );
   return response.data;
 };
+
+// ../Api/api.js
+
+// Function to fetch user data
+export const fetchUserData = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/api/user", {
+      headers: {
+        Authorization: `Token ${localStorage.getItem("token")}`, // Assuming you store token in localStorage
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw new Error("Failed to fetch user data");
+  }
+};
+
+// Function to update user data
+// ../Api/api.js
+
+export const updateUserData = async (userData) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch("http://localhost:8000/api/user", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    throw new Error("Failed to update user data");
+  }
+};

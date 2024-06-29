@@ -10,7 +10,7 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useTodoContext } from "../Context/TodoContext";
-import AshimImg from "../../assets/ashim.jpg";
+import AshimImg from "/ashim.jpg";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import { useTheme } from "@emotion/react";
 import styled from "styled-components";
@@ -149,7 +149,7 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
+              <MenuItem onClick={() => navigate("/profile")}>
                 <Typography textAlign="center">{settings[0]}</Typography>
               </MenuItem>
               <MenuItem onClick={handleLogout}>

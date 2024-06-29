@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import ProfilePage from "./components/ProfilePage/ProfilePage";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -21,9 +22,7 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token) {
-      navigate("/");
-    } else {
+    if (!token) {
       navigate("/login");
     }
   }, [navigate]);
@@ -38,6 +37,7 @@ const App = () => {
 
         <Route element={<AppLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </QueryClientProvider>
