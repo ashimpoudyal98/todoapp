@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FormContainer,
   FormTitle,
@@ -58,7 +57,8 @@ const Login = () => {
         />
 
         <p>
-          Don't have an account? <Spanup>Register Here</Spanup>
+          Dont have an account?{" "}
+          <Spanup onClick={() => navigate("/signup")}>Register Here</Spanup>
         </p>
 
         <StyledButton type="submit" variant="contained" disableElevation>

@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AppLayout from "./components/AppLayout/AppLayout";
 import Home from "./components/Home/Home";
 import Signup from "./components/Register/Signup";
@@ -18,14 +18,14 @@ const queryClient = new QueryClient({
 
 const App = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
+    if (!token && location.pathname != "/signup") {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
