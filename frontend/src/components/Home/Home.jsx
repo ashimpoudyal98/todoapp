@@ -91,7 +91,12 @@ const Home = () => {
 
       {todos &&
         todos.map((item, index) => (
-          <Todo key={index} todo={item.title} desc={item.description} />
+          <Todo
+            key={index}
+            todo={item.title}
+            desc={item.description}
+            id={item.id}
+          />
         ))}
     </div>
   );

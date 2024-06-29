@@ -1,3 +1,5 @@
+// Todo.js
+
 import React, { useState } from "react";
 import {
   Paper,
@@ -18,12 +20,56 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import ListItemText from "@mui/material/ListItemText";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteTodoFn, editTodoFn } from "../Api/api";
 
 const Todo = (props) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedTodo, setEditedTodo] = useState(props.todo);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
+
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteTodo, isLoading: deleteLoading } = useMutation({
+    mutationFn: deleteTodoFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+      console.log("Todo deleted successfully");
+    },
+  });
+
+  const { mutate: editTodo, isLoading: editLoading } = useMutation({
+    mutationFn: ({ id, updatedTodo }) => editTodoFn(id, updatedTodo),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      console.log("Todo deleted successfully");
+    },
+  });
+
+  //  const editTodoFn = async (id, updatedTodo) => {
+  //   console.log(id, updatedTodo);
+
+  //   const token = localStorage.getItem("token");
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:8000/api/todos/${id}/`,
+  //       updatedTodo, // Directly pass updatedTodo as the payload
+  //       {
+  //         headers: {
+  //           Authorization: `Token ${token}`,
+  //         },
+  //       }
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw new Error("Failed to update todo");
+  //   }
+  // };
 
   const handleEditOpen = () => {
+    setEditedTitle(props.todo);
+    setEditedDescription(props.desc);
     setEditDialogOpen(true);
   };
 
@@ -31,16 +77,16 @@ const Todo = (props) => {
     setEditDialogOpen(false);
   };
 
-  const handleTodoChange = (event) => {
-    setEditedTodo(event.target.value);
+  const handleSaveEdit = async () => {
+    editTodo({
+      updatedTodo: { title: editedTitle, description: editedDescription },
+      id: props.id,
+    });
+    setEditDialogOpen(false);
   };
 
-  const handleSaveEdit = () => {
-    // Handle saving the edited todo
-    console.log("Edited todo:", editedTodo);
-
-    // Close the edit dialog
-    setEditDialogOpen(false);
+  const handleDelete = () => {
+    deleteTodo(props.id);
   };
 
   return (
@@ -66,6 +112,7 @@ const Todo = (props) => {
                       <EditOutlinedIcon />
                     </IconButton>
                     <IconButton
+                      onClick={handleDelete}
                       edge="end"
                       aria-label="delete"
                       sx={{ "&:hover": { backgroundColor: "#f44336" } }}
@@ -91,14 +138,42 @@ const Todo = (props) => {
       <Dialog open={editDialogOpen} onClose={handleEditClose}>
         <DialogTitle>Edit Todo</DialogTitle>
         <DialogContent>
+          {/* <TextField
+            label="Create Todo"
+            id="outlined-size-small"
+            variant="outlined"
+            size="small"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <TextField
+            label="Description"
+            id="outlined-size-small"
+            variant="outlined"
+            size="small"
+            value={descInput}
+            onChange={(e) => setDescInput(e.target.value)}
+          /> */}
+
           <TextField
             autoFocus
             margin="dense"
-            label="Edit Todo"
+            label="Edit Title"
             type="text"
             fullWidth
-            value={editedTodo}
-            onChange={handleTodoChange}
+            name="title"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Edit Description"
+            type="text"
+            fullWidth
+            name="description"
+            value={editedDescription}
+            onChange={(e) => setEditedDescription(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

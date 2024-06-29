@@ -15,6 +15,10 @@ import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import { useTheme } from "@emotion/react";
 import styled from "styled-components";
 
+import { useMutation } from "@tanstack/react-query";
+import { logoutFn } from "../Api/api";
+import { useNavigate } from "react-router-dom";
+
 const settings = ["Profile", "Logout"];
 
 function ResponsiveAppBar() {
@@ -23,15 +27,22 @@ function ResponsiveAppBar() {
   const { todos } = useTodoContext();
 
   const numTodos = todos.length;
+  const navigate = useNavigate();
 
-  console.log(numTodos);
-
+  const { mutate, isLoading } = useMutation(logoutFn);
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    mutate();
+
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   // const WelcomeText = styled.p`
@@ -138,11 +149,12 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{settings[0]}</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <Typography textAlign="center">{settings[1]}</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
