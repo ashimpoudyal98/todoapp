@@ -8,8 +8,21 @@ import {
   StyledTextField,
 } from "./LoginStyled";
 import { useForm } from "react-hook-form";
-
+import { useMutation } from "@tanstack/react-query";
+import { loginMutation } from "../Api/api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: loginMutation,
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      toast.success("Success");
+      navigate("/");
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -18,6 +31,7 @@ const Login = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    mutate(data);
   };
 
   return (
@@ -26,11 +40,13 @@ const Login = () => {
         <FormTitle variant="h1">Create an Account</FormTitle>
 
         <StyledTextField
-          label="Email"
+          label="Username"
           variant="outlined"
-          {...register("email", { required: "Email is required" })}
-          error={!!errors.email}
-          helperText={errors.email && errors.email.message}
+          {...register("username", {
+            required: "Username is required",
+          })}
+          error={!!errors.username}
+          helperText={errors.username && errors.username.message}
         />
         <StyledTextField
           label="Password"
@@ -46,7 +62,7 @@ const Login = () => {
         </p>
 
         <StyledButton type="submit" variant="contained" disableElevation>
-          Sign Up
+          {isLoading ? "Logging in ...." : "Login"}
         </StyledButton>
       </FormContainer>
     </LoginDiv>
