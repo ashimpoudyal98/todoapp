@@ -15,8 +15,8 @@ import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import { useTheme } from "@emotion/react";
 import styled from "styled-components";
 
-import { useMutation } from "@tanstack/react-query";
-import { logoutFn } from "../Api/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { fetchUserData, logoutFn } from "../Api/api";
 import { useNavigate } from "react-router-dom";
 
 const settings = ["Profile", "Logout"];
@@ -24,10 +24,18 @@ const settings = ["Profile", "Logout"];
 function ResponsiveAppBar() {
   const theme = useTheme();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { todos } = useTodoContext();
 
-  const numTodos = todos.length;
   const navigate = useNavigate();
+
+  const {
+    data: userData,
+
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: fetchUserData,
+  });
 
   const { mutate, isLoading } = useMutation(logoutFn);
   const handleOpenUserMenu = (event) => {
@@ -110,9 +118,7 @@ function ResponsiveAppBar() {
               color: "inherit",
               display: { xs: "flex", md: "flex" },
             }}
-          >
-            You have {numTodos} todos
-          </Typography>
+          ></Typography>
 
           {/* Profile icon (right-aligned) */}
           <Box
@@ -122,7 +128,7 @@ function ResponsiveAppBar() {
               },
             }}
           >
-            <p>Welcome! Ashim Poudyal </p>
+            <p>Welcome! {userData?.first_name} </p>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
@@ -130,7 +136,10 @@ function ResponsiveAppBar() {
                 onClick={handleOpenUserMenu}
                 sx={{ paddingLeft: "10px" }}
               >
-                <Avatar alt="Remy Sharp" src={AshimImg} />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={userData?.profile?.profile_image}
+                />
               </IconButton>
             </Tooltip>
             <Menu

@@ -10,10 +10,13 @@ import {
 } from "@mui/material";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchUserData, updateUserData } from "../Api/api"; // Adjust imports as per your API file
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const [imageSrc, setImageSrc] = useState("/assets/"); // Initial image source
-
+  const [imageFile, setImageFile] = useState(null); // File object for image
+  const navigate = useNavigate();
   // Fetch user data using React Query
   const {
     data: userData,
@@ -39,6 +42,7 @@ const ProfilePage = () => {
     mutationFn: updateUserData,
     onSuccess: () => {
       console.log("Updated");
+      navigate("/");
       refetch(); // Example: Refetch user data after successful update
     },
     onError: (error) => {
@@ -62,6 +66,7 @@ const ProfilePage = () => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
+    setImageFile(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -81,13 +86,23 @@ const ProfilePage = () => {
       email: formData.email,
       profile: {
         phone_number: formData.additionalPhoneNumber,
-        profile_image: imageSrc, // Example: Update image source if needed
       },
     };
 
     try {
       await editUser(updatedUserData);
-      // Handle success, e.g., show success message or redirect
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("profile.profile_image", imageFile);
+        axios
+          .patch("http://localhost:8000/api/user", formData, {
+            headers: {
+              Authorization: `Token ${localStorage.getItem("token")}`,
+            },
+          })
+          .then((response) => {})
+          .catch((error) => {});
+      }
     } catch (error) {
       // Handle error, e.g., show error message
       console.error("Failed to update user data:", error);

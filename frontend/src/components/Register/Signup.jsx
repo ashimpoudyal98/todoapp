@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signupMutation } from "../Api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const SignupForm = () => {
   const navigate = useNavigate();
 
@@ -20,6 +21,15 @@ const SignupForm = () => {
     onSuccess: () => {
       console.log("User registered successfully");
       navigate("/login");
+    },
+    onError: (error) => {
+      // Handle specific error messages here
+      if (error.response.status === 409) {
+        // Assuming 409 is the status code for conflict (username already exists)
+        toast.error("Username is already taken. Please choose another one.");
+      } else {
+        toast.error("Failed to register. Please try again later.");
+      }
     },
   });
 
@@ -117,10 +127,10 @@ const SignupForm = () => {
         </p>
 
         <StyledButton
-          onClick={handleSubmit}
           type="submit"
           variant="contained"
           disableElevation
+          onClick={handleSubmit(onSubmit)}
         >
           {isLoading ? "Signing Up..." : "Sign Up"}
         </StyledButton>
