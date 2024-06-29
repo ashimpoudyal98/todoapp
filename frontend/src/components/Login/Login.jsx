@@ -36,7 +36,7 @@ const Login = () => {
   return (
     <LoginDiv>
       <FormContainer onSubmit={handleSubmit(onSubmit)}>
-        <FormTitle variant="h1">Create an Account</FormTitle>
+        <FormTitle variant="h1">Login</FormTitle>
 
         <StyledTextField
           label="Username"

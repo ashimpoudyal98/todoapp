@@ -3,7 +3,7 @@ import axios from "axios";
 export const signupMutation = async (formData) => {
   try {
     const response = await axios.post(
-      "http://localhost:8000/api/auth/register",
+      "https://www.varicon.nextify.dev/api/auth/register",
       formData
     );
     return response.data;
@@ -17,7 +17,7 @@ export const loginMutation = async (formData) => {
   console.log("Login form data:", formData);
   try {
     const response = await axios.post(
-      "http://localhost:8000/api/auth/login",
+      "https://www.varicon.nextify.dev/api/auth/login",
       formData
     );
     return response.data; // Return response data if successful
@@ -32,7 +32,7 @@ export const addTodoFn = async (newTodo) => {
   console.log("Token:", token);
   try {
     const response = await axios.post(
-      "http://localhost:8000/api/todos/",
+      "https://www.varicon.nextify.dev/api/todos/",
       newTodo,
       {
         headers: {
@@ -66,7 +66,7 @@ export const deleteTodoFn = async (id) => {
   const token = localStorage.getItem("token");
   try {
     const response = await axios.delete(
-      `http://localhost:8000/api/todos/${id}/`,
+      `https://www.varicon.nextify.dev/api/todos/${id}/`,
       {
         headers: {
           Authorization: `Token ${token}`,
@@ -85,7 +85,7 @@ export const editTodoFn = async (id, updatedTodo) => {
   const token = localStorage.getItem("token");
   try {
     const response = await axios.put(
-      `http://localhost:8000/api/todos/${id}/`,
+      `https://www.varicon.nextify.dev/api/todos/${id}/`,
       updatedTodo,
       {
         headers: {
@@ -103,7 +103,7 @@ export const editTodoFn = async (id, updatedTodo) => {
 export const logoutFn = async () => {
   const token = localStorage.getItem("token");
   const response = await axios.post(
-    "http://localhost:8000/api/auth/logout",
+    "https://www.varicon.nextify.dev/api/auth/logout",
     null,
     {
       headers: {
@@ -140,7 +140,7 @@ export const fetchUserData = async () => {
 export const updateUserData = async (userData) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch("http://localhost:8000/api/user", {
+    const response = await fetch("https://www.varicon.nextify.dev/api/user", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
